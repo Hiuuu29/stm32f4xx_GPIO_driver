@@ -235,9 +235,13 @@ uint16_t GPIO_Read_Port(GPIO_RegDef_t *pGPIO){
  *@note						: None
  *
  */
-void GPIO_Write_Pin(GPIO_RegDef_t *pGPIO, uint8_t number, uint8_t value){
-
+void GPIO_Write_Pin(GPIO_RegDef_t *pGPIO, uint8_t number, uint8_t value) {
+    if (value)
+        pGPIO->ODR |= (1 << number);  // Set bit (1)
+    else
+        pGPIO->ODR &= ~(1 << number); // Clear bit (0)
 }
+
 
 /**
  * 							  					Write state for GPIO x
@@ -255,8 +259,9 @@ void GPIO_Write_Pin(GPIO_RegDef_t *pGPIO, uint8_t number, uint8_t value){
  *@note						: None
  *
  */
-void GPIO_Write_Port(GPIO_RegDef_t *pGPIO, uint8_t value){
-
+void GPIO_Write_Port(GPIO_RegDef_t *pGPIO, uint16_t value){
+	// overwrite all the bit in register
+	pGPIO->ODR = ~(1 << value);
 }
 
 /**
@@ -275,7 +280,9 @@ void GPIO_Write_Port(GPIO_RegDef_t *pGPIO, uint8_t value){
  *@note						: None
  *
  */
-void GPIO_Toggle_Output(GPIO_RegDef_t *pGPIO, uint8_t number);
+void GPIO_Toggle_Output(GPIO_RegDef_t *pGPIO, uint8_t number){
+	pGPIO->ODR ^= (1 << number);
+}
 
 /**
  * 							  					Config Interrupt on IRQ

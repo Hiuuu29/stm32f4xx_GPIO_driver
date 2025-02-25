@@ -133,7 +133,7 @@ uint16_t GPIO_Read_Port(GPIO_RegDef_t *pGPIO);				// input of all 16 pin on GPIO
  * OUTPUT IN GPIO AND GPIO PIN
  */
 void GPIO_Write_Pin(GPIO_RegDef_t *pGPIO, uint8_t number, uint8_t value);				// output of all 16 pin on GPIO x
-void GPIO_Write_Port(GPIO_RegDef_t *pGPIO, uint8_t value);				// output of all 16 pin on GPIO x
+void GPIO_Write_Port(GPIO_RegDef_t *pGPIO, uint16_t value);				// output of all 16 pin on GPIO x
 void GPIO_Toggle_Output(GPIO_RegDef_t *pGPIO, uint8_t number);			// switch state H or L
 
 /**

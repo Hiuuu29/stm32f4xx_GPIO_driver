@@ -61,13 +61,14 @@ Discarded input sections
  .group         0x00000000        0xc ./Driver/Src/stm32f407_driver_GPIO.o
  .group         0x00000000        0xc ./Driver/Src/stm32f407_driver_GPIO.o
  .group         0x00000000        0xc ./Driver/Src/stm32f407_driver_GPIO.o
+ .group         0x00000000        0xc ./Driver/Src/stm32f407_driver_GPIO.o
  .text          0x00000000        0x0 ./Driver/Src/stm32f407_driver_GPIO.o
  .data          0x00000000        0x0 ./Driver/Src/stm32f407_driver_GPIO.o
  .bss           0x00000000        0x0 ./Driver/Src/stm32f407_driver_GPIO.o
  .text.GPIO_CLK
                 0x00000000      0x208 ./Driver/Src/stm32f407_driver_GPIO.o
  .text.GPIO_Init
-                0x00000000       0x14 ./Driver/Src/stm32f407_driver_GPIO.o
+                0x00000000      0x1f8 ./Driver/Src/stm32f407_driver_GPIO.o
  .text.GPIO_Read_Pin
                 0x00000000       0x1a ./Driver/Src/stm32f407_driver_GPIO.o
  .text.GPIO_Read_Port
@@ -80,13 +81,13 @@ Discarded input sections
                 0x00000000       0x1e ./Driver/Src/stm32f407_driver_GPIO.o
  .text.GPIO_IRQ_Handling
                 0x00000000       0x16 ./Driver/Src/stm32f407_driver_GPIO.o
- .debug_info    0x00000000      0x4df ./Driver/Src/stm32f407_driver_GPIO.o
- .debug_abbrev  0x00000000       0xf8 ./Driver/Src/stm32f407_driver_GPIO.o
+ .debug_info    0x00000000      0x50d ./Driver/Src/stm32f407_driver_GPIO.o
+ .debug_abbrev  0x00000000      0x152 ./Driver/Src/stm32f407_driver_GPIO.o
  .debug_aranges
                 0x00000000       0x58 ./Driver/Src/stm32f407_driver_GPIO.o
  .debug_rnglists
-                0x00000000       0x3e ./Driver/Src/stm32f407_driver_GPIO.o
- .debug_macro   0x00000000       0x76 ./Driver/Src/stm32f407_driver_GPIO.o
+                0x00000000       0x3f ./Driver/Src/stm32f407_driver_GPIO.o
+ .debug_macro   0x00000000       0x7b ./Driver/Src/stm32f407_driver_GPIO.o
  .debug_macro   0x00000000      0xaba ./Driver/Src/stm32f407_driver_GPIO.o
  .debug_macro   0x00000000       0x22 ./Driver/Src/stm32f407_driver_GPIO.o
  .debug_macro   0x00000000       0x8e ./Driver/Src/stm32f407_driver_GPIO.o
@@ -95,8 +96,9 @@ Discarded input sections
  .debug_macro   0x00000000       0x6a ./Driver/Src/stm32f407_driver_GPIO.o
  .debug_macro   0x00000000      0x1df ./Driver/Src/stm32f407_driver_GPIO.o
  .debug_macro   0x00000000      0x3b4 ./Driver/Src/stm32f407_driver_GPIO.o
- .debug_line    0x00000000      0x59e ./Driver/Src/stm32f407_driver_GPIO.o
- .debug_str     0x00000000     0x50a2 ./Driver/Src/stm32f407_driver_GPIO.o
+ .debug_macro   0x00000000       0xc4 ./Driver/Src/stm32f407_driver_GPIO.o
+ .debug_line    0x00000000      0x74c ./Driver/Src/stm32f407_driver_GPIO.o
+ .debug_str     0x00000000     0x5299 ./Driver/Src/stm32f407_driver_GPIO.o
  .comment       0x00000000       0x44 ./Driver/Src/stm32f407_driver_GPIO.o
  .debug_frame   0x00000000      0x150 ./Driver/Src/stm32f407_driver_GPIO.o
  .ARM.attributes

@@ -93,15 +93,60 @@ void GPIO_CLK(GPIO_RegDef_t *pGPIO, uint8_t EnorDis){
  */
 void GPIO_Init(GPIO_HAL *pGPIO_Handle){
 
-	// 1. Mode
-	// 2. Speed
-	// 3. pull up pull down
-	// 4. out put type
-	// 5. Alternate Function
-	if(pGPIO_Handle->pGPIOx == GPIOA){
-
+	/*Nguoi dung da khai bao tat ca cac gia tri can thiet, bay h chi huong con tro
+	 * den vi tri thanh ghi dung voi nguoi dung nhap
+	*/
+	//-----------------------------------------------------------------------------------------------
+	//1. Mode
+	uint8_t tmp = 0;
+	// Check if mode interrupt or not (IRQ have value > GPIO_MODE_ANALOG (3))
+	if(pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_mode <= GPIO_MODE_ANALOG){
+		// not an interrupt
+		// Shift value of mode to the right register
+		tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_mode << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
+		pGPIO_Handle->pGPIOx->MODER &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num)); // clear bit at that position
+		pGPIO_Handle->pGPIOx->MODER |= tmp; //only change the bit that is being config, not check other bit
 	}else{
-
+		// it is an interrupt
+		// Left for future study
+	}
+	tmp = 0;
+	//-----------------------------------------------------------------------------------------------
+	// 2. Speed
+	tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_speed << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
+	pGPIO_Handle->pGPIOx->OSPEEDR &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num));
+	pGPIO_Handle->pGPIOx->OSPEEDR |= tmp;
+	tmp = 0;
+	//-----------------------------------------------------------------------------------------------
+	// 3. pull up pull down
+	tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_PuPdCONTROL << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
+	pGPIO_Handle->pGPIOx->PUPDR &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num));
+	pGPIO_Handle->pGPIOx->PUPDR |= tmp;
+	tmp = 0;
+	//-----------------------------------------------------------------------------------------------
+	// 4. out put type
+	tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_OUTPUT_TYPE << pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num;
+	pGPIO_Handle->pGPIOx->OTYPER &= ~(0x03 << pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
+	pGPIO_Handle->pGPIOx->OTYPER |= tmp;
+	tmp = 0;
+	//-----------------------------------------------------------------------------------------------
+	// 5. Alternate Function
+	if(pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_mode == GPIO_MODE_ALT){
+		if(pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num <= 7){ // from 0 - 7 AFRL
+				// low
+				tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_AltFunc << (4 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
+				pGPIO_Handle->pGPIOx->AFR[0] &= ~(0x03 << (4 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num));
+				pGPIO_Handle->pGPIOx->AFR[0] |= tmp;
+				tmp = 0;
+			}
+			else{ // 8 - 15 AFRH
+				// high
+				uint8_t tmp1 = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num % 8;
+				tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_AltFunc << (4 * tmp1);
+				pGPIO_Handle->pGPIOx->AFR[1] &= ~(0x03 << (4 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num));
+				pGPIO_Handle->pGPIOx->AFR[1] |= tmp;
+				tmp = 0;
+			}
 	}
 }
 

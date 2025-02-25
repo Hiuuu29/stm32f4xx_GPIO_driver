@@ -17,9 +17,9 @@
 
 //----------------------------------------------------CREATE 2 STRUCTURE HANDLE AND CONFIG STRUCTURE------------------------------------------------
 
-// pin config struct to config specifig thing like pin, speed, mode ----------------------------------- DO NGUOI DUNG NHAP
-typedef struct{
-
+// pin config struct to config specifig thing like pin, speed, mode
+typedef struct{ //-------- DO NGUOI DUNG NHAP
+	// tat ca cac gia tri o day dc nguoi dung nhap
 	uint8_t GPIO_Pin_num;				// chan so may trong GPIO (0-15)
 	uint8_t GPIO_Pin_mode;				// mode input or output
 	uint8_t GPIO_Pin_speed;				// set up speed
@@ -30,7 +30,7 @@ typedef struct{
 }GPIO_PIN_CONFIG;
 
 // hanlde struct to config which port to choose
-typedef struct{ //------------------------------------------------------------------------------------- DO NGUOI DUNG NHAP
+typedef struct{ //--------------------------------- DO NGUOI DUNG NHAP
 
 	// pointer point to the base address of GPIO peripheral
 	GPIO_RegDef_t *pGPIOx;				//Hold the base address of GPIOx of the pinx belong

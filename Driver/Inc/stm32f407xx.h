@@ -47,8 +47,8 @@
 #define BASE_FLASH_INTERFACE_REGISTER 	0x40023C00U
 #define BASE_RCC 		0x40023800U
 #define BASE_CRC 		0x40023000U
-#define BASE_GPIOK 		0x40022800U
-#define BASE_GPIOJ 		0x40022400U
+//#define BASE_GPIOK 		0x40022800U
+//#define BASE_GPIOJ 		0x40022400U
 #define BASE_GPIOI 		0x40022000U
 #define BASE_GPIOH 		0x40021C00U
 #define BASE_GPIOG 		0x40021800U
@@ -234,8 +234,6 @@ typedef struct
 #define GPIOG_CLK_EN			(RCC->AHB1ENR |= (1 << 6))
 #define GPIOH_CLK_EN			(RCC->AHB1ENR |= (1 << 7))
 #define GPIOI_CLK_EN			(RCC->AHB1ENR |= (1 << 8))
-#define GPIOJ_CLK_EN			(RCC->AHB1ENR |= (1 << 9))
-#define GPIOK_CLK_EN			(RCC->AHB1ENR |= (1 << 10))
 
 /*
  * Enable clock for I2Cx
@@ -283,8 +281,6 @@ typedef struct
 #define GPIOG_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 6))
 #define GPIOH_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 7))
 #define GPIOI_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 8))
-#define GPIOJ_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 9))
-#define GPIOK_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 10))
 
 /*
  * Disable clock for I2Cx
@@ -315,6 +311,16 @@ typedef struct
 #define UART7_CLK_DIS			(RCC->APB2ENR &= ~(1 << 30))// APB2
 #define UART8_CLK_DIS			(RCC->APB2ENR &= ~(1 << 31))// APB2
 
+//------------------------------------------ MACROS USE TO RESET GPIO ----------------------------------------
+#define GPIOA_RESET()  do { RCC->AHB1RSTR |= (1 << 0); RCC->AHB1RSTR &= ~(1 << 0); } while(0)
+#define GPIOB_RESET()  do { RCC->AHB1RSTR |= (1 << 1); RCC->AHB1RSTR &= ~(1 << 1); } while(0)
+#define GPIOC_RESET()  do { RCC->AHB1RSTR |= (1 << 2); RCC->AHB1RSTR &= ~(1 << 2); } while(0)
+#define GPIOD_RESET()  do { RCC->AHB1RSTR |= (1 << 3); RCC->AHB1RSTR &= ~(1 << 3); } while(0)
+#define GPIOE_RESET()  do { RCC->AHB1RSTR |= (1 << 4); RCC->AHB1RSTR &= ~(1 << 4); } while(0)
+#define GPIOF_RESET()  do { RCC->AHB1RSTR |= (1 << 5); RCC->AHB1RSTR &= ~(1 << 5); } while(0)
+#define GPIOG_RESET()  do { RCC->AHB1RSTR |= (1 << 6); RCC->AHB1RSTR &= ~(1 << 6); } while(0)
+#define GPIOH_RESET()  do { RCC->AHB1RSTR |= (1 << 7); RCC->AHB1RSTR &= ~(1 << 7); } while(0)
+#define GPIOI_RESET()  do { RCC->AHB1RSTR |= (1 << 8); RCC->AHB1RSTR &= ~(1 << 8); } while(0)
 //------------------------------------------ MACROS USE IN API ----------------------------------------
 #define ENABLE 				1
 #define DISABLE 			0

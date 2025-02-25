@@ -44,11 +44,7 @@ void GPIO_CLK(GPIO_RegDef_t *pGPIO, uint8_t EnorDis){
 		if(pGPIO == GPIOH)
 			GPIOH_CLK_EN;
 		if(pGPIO == GPIOI)
-			GPIOI_CLK_EN;
-		if(pGPIO == GPIOJ)
-			GPIOJ_CLK_EN;
-		if(pGPIO == GPIOK)
-			GPIOK_CLK_EN;
+			GPIOI_CLK_DIS;
 	}
 	else{
 		if(pGPIO == GPIOA) 			// pointer point to the base address of GPIO (look at stm32f407xx.h for more info) 205-215
@@ -69,10 +65,6 @@ void GPIO_CLK(GPIO_RegDef_t *pGPIO, uint8_t EnorDis){
 			GPIOH_CLK_DIS;
 		if(pGPIO == GPIOI)
 			GPIOI_CLK_DIS;
-		if(pGPIO == GPIOJ)
-			GPIOJ_CLK_DIS;
-		if(pGPIO == GPIOK)
-			GPIOK_CLK_DIS;
 	}
 }
 
@@ -165,7 +157,27 @@ void GPIO_Init(GPIO_HAL *pGPIO_Handle){
  *@note						: None
  *
  */
-void GPIO_DeInit(GPIO_RegDef_t *pGPIO);
+void GPIO_DeInit(GPIO_RegDef_t *pGPIO){
+	// ALL YOU HAVE TO DO IT RESET IT AT THE RCC RM0090 PAGE - 235 (RESET : SET THE BIT 1 AND THEN 0)
+	if(pGPIO == GPIOA)
+		GPIOA_RESET;
+	if(pGPIO == GPIOB)
+		GPIOB_RESET;
+	if(pGPIO == GPIOC)
+		GPIOC_RESET;
+	if(pGPIO == GPIOD)
+		GPIOD_RESET;
+	if(pGPIO == GPIOE)
+		GPIOE_RESET;
+	if(pGPIO == GPIOF)
+		GPIOF_RESET;
+	if(pGPIO == GPIOG)
+		GPIOG_RESET;
+	if(pGPIO == GPIOH)
+		GPIOH_RESET;
+	if(pGPIO == GPIOI)
+		GPIOI_RESET;
+}
 
 /**
  * 							  					Read the state of pin x of GPIO y

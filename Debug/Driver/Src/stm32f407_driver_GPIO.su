@@ -1,0 +1,8 @@
+../Driver/Src/stm32f407_driver_GPIO.c:28:6:GPIO_CLK	16	static
+../Driver/Src/stm32f407_driver_GPIO.c:94:6:GPIO_Init	16	static
+../Driver/Src/stm32f407_driver_GPIO.c:131:9:GPIO_Read_Pin	16	static
+../Driver/Src/stm32f407_driver_GPIO.c:150:10:GPIO_Read_Port	16	static
+../Driver/Src/stm32f407_driver_GPIO.c:171:6:GPIO_Write_Pin	16	static
+../Driver/Src/stm32f407_driver_GPIO.c:191:6:GPIO_Write_Port	16	static
+../Driver/Src/stm32f407_driver_GPIO.c:230:6:GPIO_IRQ_Config	16	static
+../Driver/Src/stm32f407_driver_GPIO.c:249:6:GPIO_IRQ_Handling	16	static

@@ -3,6 +3,7 @@
  *
  *  Created on: Feb 24, 2025
  *      Author: Huynh Trung Hieu
+ *		MCU SPECIFICS DATA
  */
 #include<stdint.h>
 
@@ -273,46 +274,54 @@ typedef struct
 /*
  * Disable clock for GPIOx
  * */
-#define GPIOA_CLK_EN			(RCC->AHB1ENR &= ~(1 << 0))
-#define GPIOB_CLK_EN			(RCC->AHB1ENR &= ~(1 << 1))
-#define GPIOC_CLK_EN			(RCC->AHB1ENR &= ~(1 << 2))
-#define GPIOD_CLK_EN			(RCC->AHB1ENR &= ~(1 << 3))
-#define GPIOE_CLK_EN			(RCC->AHB1ENR &= ~(1 << 4))
-#define GPIOF_CLK_EN			(RCC->AHB1ENR &= ~(1 << 5))
-#define GPIOG_CLK_EN			(RCC->AHB1ENR &= ~(1 << 6))
-#define GPIOH_CLK_EN			(RCC->AHB1ENR &= ~(1 << 7))
-#define GPIOI_CLK_EN			(RCC->AHB1ENR &= ~(1 << 8))
-#define GPIOJ_CLK_EN			(RCC->AHB1ENR &= ~(1 << 9))
-#define GPIOK_CLK_EN			(RCC->AHB1ENR &= ~(1 << 10))
+#define GPIOA_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 0))
+#define GPIOB_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 1))
+#define GPIOC_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 2))
+#define GPIOD_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 3))
+#define GPIOE_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 4))
+#define GPIOF_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 5))
+#define GPIOG_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 6))
+#define GPIOH_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 7))
+#define GPIOI_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 8))
+#define GPIOJ_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 9))
+#define GPIOK_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 10))
 
 /*
  * Disable clock for I2Cx
  * */
-#define I2C1_CLK_EN			(RCC->APB1ENR &= ~(1 << 21))
-#define I2C2_CLK_EN			(RCC->APB1ENR &= ~(1 << 22))
-#define I2C3_CLK_EN			(RCC->APB1ENR &= ~(1 << 23))
+#define I2C1_CLK_DIS			(RCC->APB1ENR &= ~(1 << 21))
+#define I2C2_CLK_DIS			(RCC->APB1ENR &= ~(1 << 22))
+#define I2C3_CLK_DIS			(RCC->APB1ENR &= ~(1 << 23))
 
 /*
  * Disable clock for SPIx
  * */
-#define SPI1_CLK_EN			(RCC->APB2ENR &= ~(1 << 12))// APB2
-#define SPI2_CLK_EN			(RCC->APB1ENR &= ~(1 << 14))// APB1
-#define SPI3_CLK_EN			(RCC->APB1ENR &= ~(1 << 15))// APB1
+#define SPI1_CLK_DIS			(RCC->APB2ENR &= ~(1 << 12))// APB2
+#define SPI2_CLK_DIS			(RCC->APB1ENR &= ~(1 << 14))// APB1
+#define SPI3_CLK_DIS			(RCC->APB1ENR &= ~(1 << 15))// APB1
 
 /*
  * Disable clock for USARTx
  * */
-#define USART1_CLK_EN			(RCC->APB2ENR &= ~(1 << 4))// APB2
-#define USART6_CLK_EN			(RCC->APB2ENR &= ~(1 << 5))// APB2
+#define USART1_CLK_DIS			(RCC->APB2ENR &= ~(1 << 4))// APB2
+#define USART6_CLK_DIS			(RCC->APB2ENR &= ~(1 << 5))// APB2
 
-#define USART2_CLK_EN			(RCC->APB1ENR &= ~(1 << 17))// APB1
-#define USART3_CLK_EN			(RCC->APB1ENR &= ~(1 << 18))// APB1
+#define USART2_CLK_DIS			(RCC->APB1ENR &= ~(1 << 17))// APB1
+#define USART3_CLK_DIS			(RCC->APB1ENR &= ~(1 << 18))// APB1
 
 
-#define UART4_CLK_EN			(RCC->APB2ENR &= ~(1 << 19))// APB2
-#define UART5_CLK_EN			(RCC->APB2ENR &= ~(1 << 20))// APB2
-#define UART7_CLK_EN			(RCC->APB2ENR &= ~(1 << 30))// APB2
-#define UART8_CLK_EN			(RCC->APB2ENR &= ~(1 << 31))// APB2
+#define UART4_CLK_DIS			(RCC->APB2ENR &= ~(1 << 19))// APB2
+#define UART5_CLK_DIS			(RCC->APB2ENR &= ~(1 << 20))// APB2
+#define UART7_CLK_DIS			(RCC->APB2ENR &= ~(1 << 30))// APB2
+#define UART8_CLK_DIS			(RCC->APB2ENR &= ~(1 << 31))// APB2
+
+//------------------------------------------ MACROS USE IN API ----------------------------------------
+#define ENABLE 				1
+#define DISABLE 			0
+#define SET 				ENABLE
+#define RESET 				DISABLE
+#define PIN_SET 			SET
+#define PIN_RESET 			RESET
 
 
 #endif /* INC_STM32F407XX_H_ */

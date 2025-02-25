@@ -160,23 +160,23 @@ void GPIO_Init(GPIO_HAL *pGPIO_Handle){
 void GPIO_DeInit(GPIO_RegDef_t *pGPIO){
 	// ALL YOU HAVE TO DO IT RESET IT AT THE RCC RM0090 PAGE - 235 (RESET : SET THE BIT 1 AND THEN 0)
 	if(pGPIO == GPIOA)
-		GPIOA_RESET;
+		GPIOA_RESET();
 	if(pGPIO == GPIOB)
-		GPIOB_RESET;
+		GPIOB_RESET();
 	if(pGPIO == GPIOC)
-		GPIOC_RESET;
+		GPIOC_RESET();
 	if(pGPIO == GPIOD)
-		GPIOD_RESET;
+		GPIOD_RESET();
 	if(pGPIO == GPIOE)
-		GPIOE_RESET;
+		GPIOE_RESET();
 	if(pGPIO == GPIOF)
-		GPIOF_RESET;
+		GPIOF_RESET();
 	if(pGPIO == GPIOG)
-		GPIOG_RESET;
+		GPIOG_RESET();
 	if(pGPIO == GPIOH)
-		GPIOH_RESET;
+		GPIOH_RESET();
 	if(pGPIO == GPIOI)
-		GPIOI_RESET;
+		GPIOI_RESET();
 }
 
 /**
@@ -196,7 +196,7 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIO){
  *
  */
 uint8_t GPIO_Read_Pin(GPIO_RegDef_t *pGPIO, uint8_t number){
-
+	return (uint8_t)((pGPIO->IDR >> number) & 0x1);
 }
 
 /**
@@ -209,13 +209,13 @@ uint8_t GPIO_Read_Pin(GPIO_RegDef_t *pGPIO, uint8_t number){
  *
  *@para[1]					: Base address of GPIO peri to read
  *
- *@return					: State is either H or L then return type should be bool or uint8_t
+ *@return					: State is either H or L 16 of them so uint16_t
  *
  *@note						: None
  *
  */
 uint16_t GPIO_Read_Port(GPIO_RegDef_t *pGPIO){
-
+	return (uint16_t)(pGPIO->IDR & 0xFFFF);
 }
 
 /**

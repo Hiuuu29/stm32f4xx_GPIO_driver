@@ -17,14 +17,45 @@
  */
 
 #include <stdint.h>
-#include <stm32f407xx.h>
+#include <stdio.h>
+#include "stm32f407xx.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+void delay(){
+	for(uint32_t i = 0; i < 5000000; i++);
+}
+
 int main(void)
 {
+	// CASE 1 : TRY TOGGLE WITH ONBOARD LED PD12(13,14,15) USE PUSH PULL
+	// INIT A led
+	GPIO_HAL LD13;
+
+	// Select port mode speed
+	LD13.pGPIOx = GPIOD;
+	LD13.GPIO_PIN_CONFIG.GPIO_Pin_mode = GPIO_MODE_OUTPUT;
+	LD13.GPIO_PIN_CONFIG.GPIO_Pin_num = GPIO_PIN_13;
+	LD13.GPIO_PIN_CONFIG.GPIO_Pin_speed = GPIO_SPEED_H;
+	LD13.GPIO_PIN_CONFIG.GPIO_Pin_OUTPUT_TYPE = GPIO_MODE_OUTPUT_PP;
+	LD13.GPIO_PIN_CONFIG.GPIO_Pin_PuPdCONTROL = GPIO_PUPD_DIS;
+
+	//GPIO_CLK(GPIOD, ENABLE);
+
+	GPIO_Init(&LD13);
+	GPIO_Write_Pin(GPIOD, GPIO_PIN_13, SET);
+
+	printf("AHB1ENR Address: 0x%p\n", (void*)&(RCC->AHB1ENR));
+	printf("Suck\n");
+
+	// CASE 2 : TRY TOGGLE WITH ONBOARD LED PD12(13,14,15) USE OPEN DRAIN
     /* Loop forever */
-	for(;;);
+//	while(1){
+//		GPIO_Toggle_Output(GPIOD, GPIO_PIN_13);
+//		delay();
+//	}
+
+	return 0;
 }

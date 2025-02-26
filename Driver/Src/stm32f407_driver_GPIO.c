@@ -28,43 +28,43 @@
 void GPIO_CLK(GPIO_RegDef_t *pGPIO, uint8_t EnorDis){
 	if(EnorDis){ // if enable clk
 		if(pGPIO == GPIOA) 			// pointer point to the base address of GPIO (look at stm32f407xx.h for more info) 205-215
-			GPIOA_CLK_EN;			// Macros stm32f407xx.h 228 to 238
-		if(pGPIO == GPIOB)
-			GPIOB_CLK_EN;
-		if(pGPIO == GPIOC)
-			GPIOC_CLK_EN;
-		if(pGPIO == GPIOD)
-			GPIOD_CLK_EN;
-		if(pGPIO == GPIOE)
-			GPIOE_CLK_EN;
-		if(pGPIO == GPIOF)
-			GPIOF_CLK_EN;
-		if(pGPIO == GPIOG)
-			GPIOG_CLK_EN;
-		if(pGPIO == GPIOH)
-			GPIOH_CLK_EN;
-		if(pGPIO == GPIOI)
-			GPIOI_CLK_DIS;
+			GPIOA_CLK_EN();			// Macros stm32f407xx.h 228 to 238
+		else if(pGPIO == GPIOB)
+			GPIOB_CLK_EN();
+		else if(pGPIO == GPIOC)
+			GPIOC_CLK_EN();
+		else if(pGPIO == GPIOD)
+			GPIOD_CLK_EN();
+		else if(pGPIO == GPIOE)
+			GPIOE_CLK_EN();
+		else if(pGPIO == GPIOF)
+			GPIOF_CLK_EN();
+		else if(pGPIO == GPIOG)
+			GPIOG_CLK_EN();
+		else if(pGPIO == GPIOH)
+			GPIOH_CLK_EN();
+		else if(pGPIO == GPIOI)
+			GPIOI_CLK_EN();
 	}
 	else{
 		if(pGPIO == GPIOA) 			// pointer point to the base address of GPIO (look at stm32f407xx.h for more info) 205-215
-			GPIOA_CLK_DIS;			// Macros stm32f407xx.h 277 to 287
-		if(pGPIO == GPIOB)
-			GPIOB_CLK_DIS;
-		if(pGPIO == GPIOC)
-			GPIOC_CLK_DIS;
-		if(pGPIO == GPIOD)
-			GPIOD_CLK_DIS;
-		if(pGPIO == GPIOE)
-			GPIOE_CLK_DIS;
-		if(pGPIO == GPIOF)
-			GPIOF_CLK_DIS;
-		if(pGPIO == GPIOG)
-			GPIOG_CLK_DIS;
-		if(pGPIO == GPIOH)
-			GPIOH_CLK_DIS;
-		if(pGPIO == GPIOI)
-			GPIOI_CLK_DIS;
+			GPIOA_CLK_DIS();			// Macros stm32f407xx.h 277 to 287
+		else if(pGPIO == GPIOB)
+			GPIOB_CLK_DIS();
+		else if(pGPIO == GPIOC)
+			GPIOC_CLK_DIS();
+		else if(pGPIO == GPIOD)
+			GPIOD_CLK_DIS();
+		else if(pGPIO == GPIOE)
+			GPIOE_CLK_DIS();
+		else if(pGPIO == GPIOF)
+			GPIOF_CLK_DIS();
+		else if(pGPIO == GPIOG)
+			GPIOG_CLK_DIS();
+		else if(pGPIO == GPIOH)
+			GPIOH_CLK_DIS();
+		else if(pGPIO == GPIOI)
+			GPIOI_CLK_DIS();
 	}
 }
 
@@ -85,18 +85,19 @@ void GPIO_CLK(GPIO_RegDef_t *pGPIO, uint8_t EnorDis){
  */
 void GPIO_Init(GPIO_HAL *pGPIO_Handle){
 
+	GPIO_CLK(pGPIO_Handle->pGPIOx, ENABLE);
 	/*Nguoi dung da khai bao tat ca cac gia tri can thiet, bay h chi huong con tro
 	 * den vi tri thanh ghi dung voi nguoi dung nhap
 	*/
 	//-----------------------------------------------------------------------------------------------
 	//1. Mode
-	uint8_t tmp = 0;
+	uint32_t tmp = 0;
 	// Check if mode interrupt or not (IRQ have value > GPIO_MODE_ANALOG (3))
-	if(pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_mode <= GPIO_MODE_ANALOG){
+	if(pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_mode <= GPIO_MODE_ANALOG){
 		// not an interrupt
 		// Shift value of mode to the right register
-		tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_mode << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
-		pGPIO_Handle->pGPIOx->MODER &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num)); // clear bit at that position
+		tmp = (pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_mode << (2 * pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num));
+		pGPIO_Handle->pGPIOx->MODER &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num)); // clear bit at that position
 		pGPIO_Handle->pGPIOx->MODER |= tmp; //only change the bit that is being config, not check other bit
 	}else{
 		// it is an interrupt
@@ -105,40 +106,32 @@ void GPIO_Init(GPIO_HAL *pGPIO_Handle){
 	tmp = 0;
 	//-----------------------------------------------------------------------------------------------
 	// 2. Speed
-	tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_speed << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
-	pGPIO_Handle->pGPIOx->OSPEEDR &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num));
+	tmp = pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_speed << (2 * pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num);
+	pGPIO_Handle->pGPIOx->OSPEEDR &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num));
 	pGPIO_Handle->pGPIOx->OSPEEDR |= tmp;
 	tmp = 0;
 	//-----------------------------------------------------------------------------------------------
 	// 3. pull up pull down
-	tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_PuPdCONTROL << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
-	pGPIO_Handle->pGPIOx->PUPDR &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num));
+	tmp = pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_PuPdCONTROL << (2 * pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num);
+	pGPIO_Handle->pGPIOx->PUPDR &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num));
 	pGPIO_Handle->pGPIOx->PUPDR |= tmp;
 	tmp = 0;
 	//-----------------------------------------------------------------------------------------------
 	// 4. out put type
-	tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_OUTPUT_TYPE << pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num;
-	pGPIO_Handle->pGPIOx->OTYPER &= ~(0x03 << pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
+	tmp = pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_OUTPUT_TYPE << pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num;
+	pGPIO_Handle->pGPIOx->OTYPER &= ~(0x01 << pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num);
 	pGPIO_Handle->pGPIOx->OTYPER |= tmp;
 	tmp = 0;
 	//-----------------------------------------------------------------------------------------------
 	// 5. Alternate Function
-	if(pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_mode == GPIO_MODE_ALT){
-		if(pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num <= 7){ // from 0 - 7 AFRL
-				// low
-				tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_AltFunc << (4 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num);
-				pGPIO_Handle->pGPIOx->AFR[0] &= ~(0x03 << (4 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num));
-				pGPIO_Handle->pGPIOx->AFR[0] |= tmp;
-				tmp = 0;
-			}
-			else{ // 8 - 15 AFRH
-				// high
-				uint8_t tmp1 = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num % 8;
-				tmp = pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_AltFunc << (4 * tmp1);
-				pGPIO_Handle->pGPIOx->AFR[1] &= ~(0x03 << (4 * pGPIO_Handle->GPIO_PIN_CONFIG->GPIO_Pin_num));
-				pGPIO_Handle->pGPIOx->AFR[1] |= tmp;
-				tmp = 0;
-			}
+	if(pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_mode == GPIO_MODE_ALT){
+		// configure the alternate function registers
+		uint8_t temp1 , temp2 ;
+
+		temp1 = pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num/ 8 ;
+		temp2 = pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num % 8 ;
+		pGPIO_Handle->pGPIOx->AFR[temp1] &= ~(0xF << (4 * temp2)) ;
+		pGPIO_Handle->pGPIOx->AFR[temp1] |= (pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_AltFunc << (4 * temp2)) ;
 	}
 }
 
@@ -196,7 +189,7 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIO){
  *
  */
 uint8_t GPIO_Read_Pin(GPIO_RegDef_t *pGPIO, uint8_t number){
-	return (uint8_t)((pGPIO->IDR >> number) & 0x1);
+	return (uint8_t)((pGPIO->IDR >> number) & 0x00000001 );
 }
 
 /**

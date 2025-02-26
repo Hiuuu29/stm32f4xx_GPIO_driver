@@ -34,7 +34,7 @@ typedef struct{ //--------------------------------- DO NGUOI DUNG NHAP
 
 	// pointer point to the base address of GPIO peripheral
 	GPIO_RegDef_t *pGPIOx;				//Hold the base address of GPIOx of the pinx belong
-	GPIO_PIN_CONFIG *GPIO_PIN_CONFIG;
+	GPIO_PIN_CONFIG GPIO_PIN_CONFIG;
 
 }GPIO_HAL;
 //------------------------------------------------------------- POSSIBLE VALUE IN STRUCT-----------------------------------------------------

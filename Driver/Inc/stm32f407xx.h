@@ -3,10 +3,10 @@
  *
  *  Created on: Feb 24, 2025
  *      Author: Huynh Trung Hieu
- *		MCU SPECIFICS DATA
+ *		MCU SPECIFICS BASE ADDRESS
  */
 #include<stdint.h>
-
+#include<stddef.h>
 #ifndef INC_STM32F407XX_H_
 #define INC_STM32F407XX_H_
 
@@ -107,7 +107,12 @@
 #define BASE_TIM3         0x40000400U
 #define BASE_TIM2         0x40000000U
 
-
+// base address for various bus domains
+#define PERIPPH_BASE	0x40000000U
+#define AHB1PERIPH_BASE	0x40020000U
+#define AHB2PERIPH_BASE	0x50000000U
+#define APB1ERIPH_BASE	0x40000000U
+#define APB2ERIPH_BASE	0x40010000U
 
 ////----------------------------------------- FLEXIBILITY FOR ALL MCU -----------------------------
 ////// DEFINE THE BASE OF BUS PERIPHERAL THEN CALCULATE PERIPHERAL BY
@@ -162,6 +167,8 @@ typedef struct
  * RM0090 page 212 - 214
  * */
 
+// NO NEED TO INIT OFFSET : BUT!!! NEED TO INIT RESERVED AND THE ORDER OF REGISTER MUST!! BE CORRRECT
+// SO THE OFF SET WILL AUTOMATIC INIT BY THE STRUCT
 typedef struct
 {
 	__vo uint32_t CR;    			// Address offset: 0x00
@@ -171,31 +178,29 @@ typedef struct
 	__vo uint32_t AHB1RSTR;      	// Address offset: 0x10
 	__vo uint32_t AHB2RSTR;      	// Address offset: 0x14
 	__vo uint32_t AHB3RSTR;    		// Address offset: 0x18
-
+	__vo uint32_t RESERVED1	;
 	__vo uint32_t APB1RSTR;    		// Address offset: 0x20
 	__vo uint32_t APB2RSTR;     	// Address offset: 0x24
-
+	__vo uint32_t RESERVED2[2];
 	__vo uint32_t AHB1ENR;   		// Address offset: 0x30
 	__vo uint32_t AHB2ENR;   		// Address offset: 0x34
 	__vo uint32_t AHB3ENR;   		// Address offset: 0x38
-
+	__vo uint32_t RESERVED3 	;
 	__vo uint32_t APB1ENR;   		// Address offset: 0x40
 	__vo uint32_t APB2ENR;   		// Address offset: 0x44
-
+	__vo uint32_t RESERVED4[2];
 	__vo uint32_t AHB1LPENR; 		// Address offset: 0x50
 	__vo uint32_t AHB2LPENR;   		// Address offset: 0x54
 	__vo uint32_t AHB3LPENR;   		// Address offset: 0x58
-
+	__vo uint32_t RESERVED5;
 	__vo uint32_t APB1LPENR;   		// Address offset: 0x60
 	__vo uint32_t APB2LPENR;   		// Address offset: 0x64
-
+	__vo uint32_t RESERVED6[2];
 	__vo uint32_t BDCR;   			// Address offset: 0x70
 	__vo uint32_t CSR;   			// Address offset: 0x74
-
+	__vo uint32_t RESERVED7[2];
 	__vo uint32_t SSCGR;   			// Address offset: 0x80
 	__vo uint32_t PLLI2SCFGR;   	// Address offset: 0x84
-	__vo uint32_t PLLSAICFGR;   	// Address offset: 0x88
-	__vo uint32_t DCKCFGR;   		// Address offset: 0x8C
 } RCC_RegDef_t;
 
 /*
@@ -213,7 +218,6 @@ typedef struct
 #define GPIOI			((GPIO_RegDef_t*)BASE_GPIOI)
 #define GPIOJ			((GPIO_RegDef_t*)BASE_GPIOJ)
 #define GPIOK			((GPIO_RegDef_t*)BASE_GPIOK)
-
 #define RCC				((RCC_RegDef_t*)BASE_RCC)
 
 //------------------------------------------ ENABLE CLOCK ----------------------------------------
@@ -225,15 +229,15 @@ typedef struct
  * Enable clock for GPIOx
  * REFER TO RM0090 page 182		AHB1 BUS
  * */
-#define GPIOA_CLK_EN			(RCC->AHB1ENR |= (1 << 0))
-#define GPIOB_CLK_EN			(RCC->AHB1ENR |= (1 << 1))
-#define GPIOC_CLK_EN			(RCC->AHB1ENR |= (1 << 2))
-#define GPIOD_CLK_EN			(RCC->AHB1ENR |= (1 << 3))
-#define GPIOE_CLK_EN			(RCC->AHB1ENR |= (1 << 4))
-#define GPIOF_CLK_EN			(RCC->AHB1ENR |= (1 << 5))
-#define GPIOG_CLK_EN			(RCC->AHB1ENR |= (1 << 6))
-#define GPIOH_CLK_EN			(RCC->AHB1ENR |= (1 << 7))
-#define GPIOI_CLK_EN			(RCC->AHB1ENR |= (1 << 8))
+#define GPIOA_CLK_EN()			(RCC->AHB1ENR |= (1 << 0))
+#define GPIOB_CLK_EN()			(RCC->AHB1ENR |= (1 << 1))
+#define GPIOC_CLK_EN()			(RCC->AHB1ENR |= (1 << 2))
+#define GPIOD_CLK_EN()			(RCC->AHB1ENR |= (1 << 3))
+#define GPIOE_CLK_EN()			(RCC->AHB1ENR |= (1 << 4))
+#define GPIOF_CLK_EN()			(RCC->AHB1ENR |= (1 << 5))
+#define GPIOG_CLK_EN()			(RCC->AHB1ENR |= (1 << 6))
+#define GPIOH_CLK_EN()			(RCC->AHB1ENR |= (1 << 7))
+#define GPIOI_CLK_EN()			(RCC->AHB1ENR |= (1 << 8))
 
 /*
  * Enable clock for I2Cx
@@ -272,15 +276,15 @@ typedef struct
 /*
  * Disable clock for GPIOx
  * */
-#define GPIOA_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 0))
-#define GPIOB_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 1))
-#define GPIOC_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 2))
-#define GPIOD_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 3))
-#define GPIOE_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 4))
-#define GPIOF_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 5))
-#define GPIOG_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 6))
-#define GPIOH_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 7))
-#define GPIOI_CLK_DIS			(RCC->AHB1ENR &= ~(1 << 8))
+#define GPIOA_CLK_DIS()			(RCC->AHB1ENR &= ~(1 << 0))
+#define GPIOB_CLK_DIS()			(RCC->AHB1ENR &= ~(1 << 1))
+#define GPIOC_CLK_DIS()			(RCC->AHB1ENR &= ~(1 << 2))
+#define GPIOD_CLK_DIS()			(RCC->AHB1ENR &= ~(1 << 3))
+#define GPIOE_CLK_DIS()			(RCC->AHB1ENR &= ~(1 << 4))
+#define GPIOF_CLK_DIS()			(RCC->AHB1ENR &= ~(1 << 5))
+#define GPIOG_CLK_DIS()			(RCC->AHB1ENR &= ~(1 << 6))
+#define GPIOH_CLK_DIS()			(RCC->AHB1ENR &= ~(1 << 7))
+#define GPIOI_CLK_DIS()			(RCC->AHB1ENR &= ~(1 << 8))
 
 /*
  * Disable clock for I2Cx
@@ -330,4 +334,5 @@ typedef struct
 #define PIN_RESET 			RESET
 
 
+#include "stm32f407xx_driver.h"
 #endif /* INC_STM32F407XX_H_ */

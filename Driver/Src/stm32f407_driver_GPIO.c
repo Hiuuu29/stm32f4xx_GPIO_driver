@@ -100,9 +100,38 @@ void GPIO_Init(GPIO_HAL *pGPIO_Handle){
 		pGPIO_Handle->pGPIOx->MODER &= ~(0x03 << (2 * pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num)); // clear bit at that position
 		pGPIO_Handle->pGPIOx->MODER |= tmp; //only change the bit that is being config, not check other bit
 	}else{
-		// it is an interrupt
-		// Left for future study
+		// 1. CHECK WHAT KIND OF INTERRUPT IS THIS
+		if(pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_mode == GPIO_MODE_IN_FE){
+			// config falling trigger selection register (FISR)
+			EXTI->EXTI_FTSR |= (1 << pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num); 	// ENABLE FISR ON SELECTED PIN
+			EXTI->EXTI_RTSR &= ~(1 << pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num); 	// DISABLE RISR ON SELECTED PIN
+		}
+		else if(pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_mode == GPIO_MODE_IN_RE){
+			// config rising trigger selection register (RISR)
+			EXTI->EXTI_RTSR |= (1 << pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num); 	// ENABLE RISR ON SELECTED PIN
+			EXTI->EXTI_FTSR &= ~(1 << pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num); 	// DISABLE FISR ON SELECTED PIN
+		}
+		else{
+		// 1. config falling, rising trigger selection register (FISR and RTSR)
+			EXTI->EXTI_FTSR |= (1 << pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num); 	// ENABLE FISR ON SELECTED PIN
+			EXTI->EXTI_RTSR |= (1 << pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num); 	// ENABLE RISR ON SELECTED PIN
+		}
+
+		// 2. congif GPIO port selection is SYSCFG_EXTICR
+			uint8_t tmp1 = pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num / 4; // determine what EXTICR[] 1 2 3 4 to use base on the pin
+			uint8_t tmp2 = pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num % 4; // var to shift it to the correct PORT
+			uint8_t port_code = GPIO_ADDR_TO_CODE(pGPIO_Handle->pGPIOx);
+
+			SYSCFG_CLOCK_ENABLE()
+			SYSCFG->SYSCFG_EXTICR[tmp1] |= (port_code << (4 * tmp2));
+
+		// 3. enable EXTI interrupt delivery in IMR (interrupt mask register)
+			EXTI->EXTI_IMR |= (1 << pGPIO_Handle->GPIO_PIN_CONFIG.GPIO_Pin_num);
 	}
+
+
+
+
 	tmp = 0;
 	//-----------------------------------------------------------------------------------------------
 	// 2. Speed
@@ -284,7 +313,7 @@ void GPIO_Toggle_Output(GPIO_RegDef_t *pGPIO, uint8_t number){
  ******************************************************************************************************************************
  *@Function name 			: GPIO_IRQ_Config
  *
- *@Descripes 				: Config interrupt
+ *@Descripes 				: Config interrupt (NVIC REGISTER) BASE ON VECTOR TABLE RM0090-375
  *
  *@para[1]					: IRQ number
  *@para[2]					: set priority for that IRQ
@@ -295,7 +324,59 @@ void GPIO_Toggle_Output(GPIO_RegDef_t *pGPIO, uint8_t number){
  *@note						: None
  *
  */
-void GPIO_IRQ_Config(uint8_t IRQnum, uint8_t Prio, uint8_t EnorDis){
+void GPIO_IRQ_Config(uint8_t IRQnum, uint8_t EnorDis){
+	if(EnorDis){
+		if(IRQnum <= 31){
+			//ISER0
+			NVIC_ISER0 |= (1 << IRQnum);
+		}
+		else if(IRQnum > 31 && IRQnum < 64){ // 32-63
+			//ISER1
+			NVIC_ISER1 |= (1 << IRQnum);
+		}
+		else if(IRQnum >= 64  && IRQnum < 96){ // 64-95
+			//ISER2
+			NVIC_ISER2 |= (1 << IRQnum);
+		}
+	}
+	else{
+		if(IRQnum <= 31){
+			//ICER0
+			NVIC_ICER0 |= (1 << IRQnum);
+		}
+		else if(IRQnum > 31 && IRQnum < 64){ // 32-63
+			//ICER1
+			NVIC_ICER1 |= (1 << IRQnum);
+		}
+		else if(IRQnum >= 64  && IRQnum < 96){ // 64-95
+			//ICER2
+			NVIC_ICER2 |= (1 << IRQnum);
+		}
+	}
+}
+/**
+ * 							  					Config Interrupt on IRQ
+ *
+ ******************************************************************************************************************************
+ *@Function name 			: GPIO_IRQ_Config
+ *
+ *@Descripes 				: Config interrupt (NVIC REGISTER) BASE ON VECTOR TABLE RM0090-375
+ *
+ *@para[1]					: IRQ number
+ *@para[2]					: set priority for that IRQ
+ *@para[3]					: Enable or Disable IRQ
+ *
+ *@return					: None
+ *
+ *@note						: None
+ *
+ */
+void GPIO_IRQ_Prio_Config(uint8_t IRQnum, uint8_t Prio){
+	uint8_t irqx = IRQnum / 4;
+	uint8_t irqx_section = IRQnum % 4;
+	uint8_t shift_amount = (8 * irqx_section) + (8 - NO_IRQ_IMPELMENT);
+
+	*(NVIC_PRIO_BASE + (irqx * 4)) |= (Prio << shift_amount);
 
 }
 
@@ -315,5 +396,8 @@ void GPIO_IRQ_Config(uint8_t IRQnum, uint8_t Prio, uint8_t EnorDis){
  *
  */
 void GPIO_IRQ_Handling(uint8_t number){
-
+	// Clear Pending register
+	if((EXTI->EXTI_PR) & (1 << number)){
+		EXTI->EXTI_PR |= (1 << number);
+	}
 }

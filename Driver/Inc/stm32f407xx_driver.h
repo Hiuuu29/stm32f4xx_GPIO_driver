@@ -18,7 +18,8 @@
 //----------------------------------------------------CREATE 2 STRUCTURE HANDLE AND CONFIG STRUCTURE------------------------------------------------
 
 // pin config struct to config specifig thing like pin, speed, mode
-typedef struct{ //-------- DO NGUOI DUNG NHAP
+//-------- DO NGUOI DUNG NHAP
+typedef struct{
 	// tat ca cac gia tri o day dc nguoi dung nhap
 	uint8_t GPIO_Pin_num;				// chan so may trong GPIO (0-15)
 	uint8_t GPIO_Pin_mode;				// mode input or output
@@ -67,9 +68,9 @@ typedef struct{ //--------------------------------- DO NGUOI DUNG NHAP
 #define GPIO_MODE_OUTPUT 	1
 #define GPIO_MODE_ALT 		2
 #define GPIO_MODE_ANALOG 	3
-#define GPIO_MODE_IN_FE 	4 // HAVE NO IDEA WHAT THIS IS
-#define GPIO_MODE_IN_RE 	5 // HAVE NO IDEA WHAT THIS IS
-#define GPIO_MODE_IN_RFT 	6 // HAVE NO IDEA WHAT THIS IS
+#define GPIO_MODE_IN_FE 	4 // CONFIG INTERRUPT MODE FALLING EDGE
+#define GPIO_MODE_IN_RE 	5 // CONFIG INTERRUPT MODE RISING EDGE
+#define GPIO_MODE_IN_RFT 	6 // CONFIG INTERRUPT MODE RISING FALLING EDGE
 
 /*
  * GPIO OUT PUT TYPE OF THE PIN - REFER TO RM0090 PAGE 284
@@ -139,7 +140,8 @@ void GPIO_Toggle_Output(GPIO_RegDef_t *pGPIO, uint8_t number);			// switch state
 /**
  * INTERRUPT CONFIG AND INTERRUPT HANDLER
  */
-void GPIO_IRQ_Config(uint8_t IRQnum, uint8_t Prio, uint8_t EnorDis);				// config interrupt, en/dis interrupt, setup prio,..
+void GPIO_IRQ_Config(uint8_t IRQnum, uint8_t EnorDis);				// config interrupt, en/dis interrupt, setup prio,..
+void GPIO_IRQ_Prio_Config(uint8_t IRQnum, uint8_t Prio);
 void GPIO_IRQ_Handling(uint8_t number);			// The func will handle what happen in interrupt
 
 

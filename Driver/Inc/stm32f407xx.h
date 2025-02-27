@@ -6,7 +6,6 @@
  *		MCU SPECIFICS BASE ADDRESS
  */
 #include<stdint.h>
-#include<stddef.h>
 #ifndef INC_STM32F407XX_H_
 #define INC_STM32F407XX_H_
 
@@ -108,12 +107,28 @@
 #define BASE_TIM2         0x40000000U
 
 // base address for various bus domains
-#define PERIPPH_BASE	0x40000000U
-#define AHB1PERIPH_BASE	0x40020000U
-#define AHB2PERIPH_BASE	0x50000000U
-#define APB1ERIPH_BASE	0x40000000U
-#define APB2ERIPH_BASE	0x40010000U
+#define PERIPPH_BASE		0x40000000U
+#define AHB1PERIPH_BASE		0x40020000U
+#define AHB2PERIPH_BASE		0x50000000U
+#define APB1ERIPH_BASE		0x40000000U
+#define APB2ERIPH_BASE		0x40010000U
 
+#define NVIC_PRIO_BASE ((volatile uint32_t*)0xE000E400)
+
+
+//----------------------------------------- BASE ADDRESS OF NVIC ARM CORTEX M4-----------------------------
+// enable interrupt register
+#define NVIC_ISER0			(*(__vo uint32_t*)0xE000E100)
+#define NVIC_ISER1			(*(__vo uint32_t*)0xE000E104)
+#define NVIC_ISER2			(*(__vo uint32_t*)0xE000E108)
+#define NVIC_ISER3			(*(__vo uint32_t*)0xE000E10C)
+// disable interrupt register
+#define NVIC_ICER0			(*(__vo uint32_t*)0XE000E180)
+#define NVIC_ICER1			(*(__vo uint32_t*)0xE000E184)
+#define NVIC_ICER2			(*(__vo uint32_t*)0xE000E188)
+#define NVIC_ICER3			(*(__vo uint32_t*)0xE000E18C)
+// the section of bit that not work when using interrupt
+#define NO_IRQ_IMPELMENT 		4
 ////----------------------------------------- FLEXIBILITY FOR ALL MCU -----------------------------
 ////// DEFINE THE BASE OF BUS PERIPHERAL THEN CALCULATE PERIPHERAL BY
 ////// BASE_PERIPHERAL + OFFSET
@@ -203,8 +218,27 @@ typedef struct
 	__vo uint32_t PLLI2SCFGR;   	// Address offset: 0x84
 } RCC_RegDef_t;
 
+typedef struct
+{
+	__vo uint32_t EXTI_IMR;    			// Address offset: 0x00
+	__vo uint32_t EXTI_EMR;  			// Address offset: 0x04
+	__vo uint32_t EXTI_RTSR;  			// Address offset: 0x08
+	__vo uint32_t EXTI_FTSR;    		// Address offset: 0x0C
+	__vo uint32_t EXTI_SWIER;      		// Address offset: 0x10
+	__vo uint32_t EXTI_PR;      		// Address offset: 0x14
+} EXTI_RegDef_t;
+
+typedef struct
+{
+	__vo uint32_t SYSCFG_MEMRMP;    			// Address offset: 0x00
+	__vo uint32_t SYSCFG_PMC;  					// Address offset: 0x04
+	__vo uint32_t SYSCFG_EXTICR[4];  			// Address offset: 0x08 - 0x14
+	__vo uint32_t RESERVED[2];  				// Address offset: 0x18 - 0x1C
+	__vo uint32_t SYSCFG_ECMPCR;      			// Address offset: 0x20
+} SYSCFG_RegDef_t;
+
 /*
- * type cast the GPIO base address
+ * type cast the GPIO base address and others ---------------------------------------------------
  * */
 
 #define GPIOA			((GPIO_RegDef_t*)BASE_GPIOA)
@@ -218,7 +252,32 @@ typedef struct
 #define GPIOI			((GPIO_RegDef_t*)BASE_GPIOI)
 #define GPIOJ			((GPIO_RegDef_t*)BASE_GPIOJ)
 #define GPIOK			((GPIO_RegDef_t*)BASE_GPIOK)
+
 #define RCC				((RCC_RegDef_t*)BASE_RCC)
+
+#define EXTI			((EXTI_RegDef_t*)BASE_EXTI)
+
+#define SYSCFG			((SYSCFG_RegDef_t*)BASE_SYSCFG)
+
+//------------------------------------------  FROM PORT ADD TO INT ----------------------------------------
+#define GPIO_ADDR_TO_CODE(x)			(x == GPIOA) ? 0 :\
+										(x == GPIOB) ? 1 :\
+										(x == GPIOC) ? 2 :\
+										(x == GPIOD) ? 3 :\
+										(x == GPIOE) ? 4 :\
+										(x == GPIOF) ? 5 :\
+										(x == GPIOG) ? 6 :\
+										(x == GPIOH) ? 7 :\
+										(x == GPIOI) ? 8 :0
+
+//------------------------------------------ IRQ NUM (BASE ON EXTI) VECTOR TABLE ----------------------------------------
+#define IRQ_NO_EXTI0		6
+#define IRQ_NO_EXTI1		7
+#define IRQ_NO_EXTI2		8
+#define IRQ_NO_EXTI3		9
+#define IRQ_NO_EXTI4		10
+#define IRQ_NO_EXTI9_5		23
+#define IRQ_NO_EXTI15_10	40
 
 //------------------------------------------ ENABLE CLOCK ----------------------------------------
 /*
@@ -270,6 +329,12 @@ typedef struct
 #define UART5_CLK_EN			(RCC->APB2ENR |= (1 << 20))// APB2
 #define UART7_CLK_EN			(RCC->APB2ENR |= (1 << 30))// APB2
 #define UART8_CLK_EN			(RCC->APB2ENR |= (1 << 31))// APB2
+
+/*
+ * Enable clock for SYSCFG
+ * REFER TO RM0090  -  APB2 BUS
+ * */
+#define SYSCFG_CLOCK_ENABLE()	(RCC->APB2ENR |= (1 << 14) )// APB2
 
 
 //------------------------------------------ DISABLE CLOCK ----------------------------------------
